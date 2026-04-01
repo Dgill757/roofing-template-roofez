@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Local temp files
 temp/
+
+# Large video files (>100MB — download separately via scripts/download-assets.mjs)
+public/videos/*.mp4

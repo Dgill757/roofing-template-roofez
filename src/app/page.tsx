@@ -1,9 +1,29 @@
+import TopBar from "@/components/TopBar";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import ServicesTabSection from "@/components/ServicesTabSection";
+import WhoWeServiceSection from "@/components/WhoWeServiceSection";
+import CitiesSection from "@/components/CitiesSection";
+import AboutSection from "@/components/AboutSection";
+import ReviewsSection from "@/components/ReviewsSection";
+import CtaSection from "@/components/CtaSection";
+import Footer from "@/components/Footer";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">
-        Clone target not yet built. Run <code className="font-mono text-foreground">/clone-website</code> to start.
-      </p>
-    </main>
+    <>
+      <TopBar />
+      <Navbar />
+      <main>
+        <HeroSection />
+        <ServicesTabSection />
+        <WhoWeServiceSection />
+        <CitiesSection />
+        <AboutSection />
+        <ReviewsSection />
+        <CtaSection />
+      </main>
+      <Footer />
+    </>
   );
 }
