@@ -4,34 +4,56 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const navLinks = [
+interface NavItem {
+  label: string;
+  href: string;
+  dropdown?: { label: string; href: string }[];
+  /** Render dropdown in two columns (for long lists) */
+  wideDropdown?: boolean;
+}
+
+const navLinks: NavItem[] = [
   {
     label: "About Us",
-    href: "/about-us/",
+    href: "/about-us",
     dropdown: [
-      { label: "About Us", href: "/about-us/" },
-      { label: "Awards", href: "/awards/" },
-      { label: "Careers", href: "/careers/" },
+      { label: "Service Areas", href: "/service-areas" },
+      { label: "History", href: "/history" },
+      { label: "Awards", href: "/awards" },
+      { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
     ],
   },
   {
     label: "Roofing Services",
-    href: "/roofing-services/",
+    href: "/roofing-services",
+    wideDropdown: true,
     dropdown: [
-      { label: "Roof Repair", href: "/roof-repair/" },
-      { label: "Re-Roofing", href: "/reroofing/" },
-      { label: "New Construction", href: "/new-construction-roofing/" },
-      { label: "Solar In Florida", href: "/solar-roofing/" },
-      { label: "Storm Damage Repair", href: "/storm-damage-repair/" },
+      { label: "Residential Roofing", href: "/residential-roofing" },
+      { label: "Slate and Tile Roofing", href: "/slate-tile-roofing" },
+      { label: "Shingle Roofs", href: "/shingle-roofs-cape-coral" },
+      { label: "Metal Roofing", href: "/metal-roofing" },
+      { label: "Storm Damage Repair", href: "/storm-damage-repair" },
+      { label: "Thermal Roof Inspections", href: "/thermal-roof-inspection" },
+      { label: "Roof Replacement", href: "/roof-replacement" },
+      { label: "Roof Repair", href: "/roof-repair" },
+      { label: "Re-Roofing", href: "/reroofing" },
+      { label: "Gutter Repair & Replacement", href: "/gutter-repair" },
+      { label: "Emergency Roof Repair", href: "/emergency-roof-repair" },
+      { label: "Roof Financing", href: "/financing" },
+      { label: "Solar Panels", href: "/solar-panels" },
+      { label: "Commercial Roofing", href: "/commercial-roofing" },
+      { label: "TPO and PVC Roofing", href: "/commercial-tpo-pvc-roofing" },
+      { label: "Flat Metal Roofing", href: "/commercial-flat-metal-roofing" },
     ],
   },
-  { label: "Reviews", href: "/reviews/" },
+  { label: "Reviews", href: "/reviews" },
   {
     label: "How It Works",
-    href: "/how-it-works/",
+    href: "/how-it-works",
     dropdown: [
-      { label: "How It Works", href: "/how-it-works/" },
-      { label: "Insurance", href: "/insurance/" },
+      { label: "How It Works", href: "/how-it-works" },
+      { label: "Insurance", href: "/insurance" },
     ],
   },
 ];
@@ -39,6 +61,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
 
   return (
     <header
@@ -63,36 +86,62 @@ export default function Navbar() {
             {navLinks.map((link) => (
               <div
                 key={link.label}
-                className="relative group"
+                className="relative"
                 onMouseEnter={() => link.dropdown && setOpenDropdown(link.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
                 <Link
                   href={link.href}
-                  className="flex items-center gap-1 font-ethno text-white hover:text-orange-400 transition-colors text-sm tracking-wide uppercase"
+                  className="flex items-center gap-1 font-ethno text-white transition-colors uppercase"
                   style={{ fontSize: 15, letterSpacing: "0.02em" }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#FF7600")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "white")
+                  }
                 >
                   {link.label}
                   {link.dropdown && (
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor" className="mt-0.5">
+                    <svg
+                      width="10"
+                      height="6"
+                      viewBox="0 0 10 6"
+                      fill="currentColor"
+                      className="mt-0.5 shrink-0"
+                    >
                       <path d="M0 0l5 6 5-6H0z" />
                     </svg>
                   )}
                 </Link>
+
                 {link.dropdown && openDropdown === link.label && (
                   <div
-                    className="absolute top-full left-0 min-w-48 py-2"
-                    style={{ background: "rgb(19,19,19)", border: "1px solid rgba(249,172,0,0.3)" }}
+                    className="absolute top-full left-0 py-2"
+                    style={{
+                      background: "rgb(19,19,19)",
+                      border: "1px solid rgba(249,172,0,0.3)",
+                      minWidth: link.wideDropdown ? 480 : 220,
+                      zIndex: 100,
+                    }}
                   >
-                    {link.dropdown.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className="block px-4 py-2 text-white hover:text-orange-400 font-visbydb text-sm transition-colors"
+                    {link.wideDropdown ? (
+                      /* Two-column layout for long dropdowns */
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                        }}
                       >
-                        {item.label}
-                      </Link>
-                    ))}
+                        {link.dropdown.map((item) => (
+                          <DropdownItem key={item.label} item={item} />
+                        ))}
+                      </div>
+                    ) : (
+                      link.dropdown.map((item) => (
+                        <DropdownItem key={item.label} item={item} />
+                      ))
+                    )}
                   </div>
                 )}
               </div>
@@ -101,13 +150,12 @@ export default function Navbar() {
 
           {/* Contact Us CTA */}
           <Link
-            href="/contact-us/"
-            className="hidden md:inline-flex items-center justify-center font-visbyxb text-black"
+            href="/contact-us"
+            className="hidden md:inline-flex items-center justify-center font-visbyxb"
             style={{
               background: "linear-gradient(90deg, #F9AC00 0%, #FF7600 91%)",
               padding: "12px 28px",
               fontSize: 18,
-              fontFamily: "VisbyCFExtraBold, sans-serif",
               color: "#020202",
             }}
           >
@@ -130,17 +178,61 @@ export default function Navbar() {
         {mobileOpen && (
           <div className="md:hidden pb-4 border-t border-white/10">
             {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="block py-3 text-white font-ethno text-sm uppercase hover:text-orange-400 transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
+              <div key={link.label}>
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={link.href}
+                    className="block py-3 text-white font-ethno text-sm uppercase hover:text-orange-400 transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                  {link.dropdown && (
+                    <button
+                      className="text-white p-2"
+                      onClick={() =>
+                        setMobileExpanded(
+                          mobileExpanded === link.label ? null : link.label
+                        )
+                      }
+                      aria-label={`Toggle ${link.label} submenu`}
+                    >
+                      <svg
+                        width="10"
+                        height="6"
+                        viewBox="0 0 10 6"
+                        fill="currentColor"
+                        style={{
+                          transform:
+                            mobileExpanded === link.label
+                              ? "rotate(180deg)"
+                              : "none",
+                          transition: "transform 0.2s",
+                        }}
+                      >
+                        <path d="M0 0l5 6 5-6H0z" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+                {link.dropdown && mobileExpanded === link.label && (
+                  <div className="pl-4 pb-2 border-l border-white/10">
+                    {link.dropdown.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className="block py-2 text-white/70 font-visbydb text-sm hover:text-orange-400 transition-colors"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
             <Link
-              href="/contact-us/"
+              href="/contact-us"
               className="mt-3 inline-flex items-center justify-center font-visbyxb"
               style={{
                 background: "linear-gradient(90deg, #F9AC00 0%, #FF7600 91%)",
@@ -155,5 +247,25 @@ export default function Navbar() {
         )}
       </div>
     </header>
+  );
+}
+
+function DropdownItem({ item }: { item: { label: string; href: string } }) {
+  return (
+    <Link
+      href={item.href}
+      className="block px-4 py-2 font-visbydb text-sm transition-colors"
+      style={{ color: "rgba(255,255,255,0.85)", fontSize: 13 }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = "#FF7600";
+        e.currentTarget.style.background = "rgba(255,118,0,0.08)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = "rgba(255,255,255,0.85)";
+        e.currentTarget.style.background = "transparent";
+      }}
+    >
+      {item.label}
+    </Link>
   );
 }

@@ -8,6 +8,7 @@ export default function InnerPageLayout({ children }: InnerPageLayoutProps) {
   return (
     <section
       style={{
+        background: "rgb(19,19,19)",
         backgroundImage: "url('/images/tab-back-grd.png')",
         backgroundRepeat: "repeat-x",
         backgroundPosition: "top center",
