@@ -3,7 +3,7 @@ export default function TopBar() {
     <div className="relative overflow-hidden" style={{ padding: "30px 0 15px", background: "transparent" }}>
       {/* Video background */}
       <video
-        src="/videos/top-header-video.mp4"
+        src="https://roofez.net/wp-content/uploads/2024/05/top-header-video.mp4"
         autoPlay
         loop
         muted

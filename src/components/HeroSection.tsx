@@ -14,7 +14,7 @@ export default function HeroSection() {
     <section className="relative overflow-hidden" style={{ minHeight: 900 }}>
       {/* Video background */}
       <video
-        src="/videos/hero-bg.mp4"
+        src="https://roofez.net/wp-content/uploads/Chub%20Cay.mp4"
         autoPlay
         loop
         muted

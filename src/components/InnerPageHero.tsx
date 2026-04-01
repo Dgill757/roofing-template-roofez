@@ -13,7 +13,7 @@ export default function InnerPageHero({ title, subtitle }: InnerPageHeroProps) {
     >
       {/* Shared roofing video background */}
       <video
-        src="/videos/inner-hero.mp4"
+        src="https://roofez.net/wp-content/uploads/2024/05/roofing-service-single.mp4"
         autoPlay
         loop
         muted
